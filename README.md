@@ -4,7 +4,7 @@ This is a simple exercise to test basic java programming skills.
 
 #Prerequisites
 To complete the exercise you will need
-- jre 1.8
+- jre/jdk 1.8
 - maven
 - an IDE of your choice
 
