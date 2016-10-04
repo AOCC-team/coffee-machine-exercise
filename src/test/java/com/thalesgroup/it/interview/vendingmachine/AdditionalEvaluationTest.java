@@ -44,8 +44,6 @@ public class AdditionalEvaluationTest {
     machine.insertCoin(0.3);
     final boolean cappuccinoDone = machine.select(beverage2);
 
-    Assert.assertNull("There is an error: " + machine.getErrorMessage(),
-        machine.getErrorMessage());
     Assert.assertTrue("The machine didn't gave me my coffee!", coffeeDone);
     Assert.assertTrue("The machine didn't gave me my cappuccino!", cappuccinoDone);
     Assert.assertEquals("There should be no change inside the machine!", 0.1,
@@ -78,8 +76,6 @@ public class AdditionalEvaluationTest {
 
     final boolean coffeeDone = machine.select(beverage);
 
-    Assert.assertNull("There is an error: " + machine.getErrorMessage(),
-        machine.getErrorMessage());
     Assert.assertTrue("The machine didn't gave me my coffee!", coffeeDone);
     Assert.assertEquals("There should be no change inside the machine!", 0.0,
         machine.getChange(), 0);
@@ -125,6 +121,19 @@ public class AdditionalEvaluationTest {
     Assert.assertTrue("That was fast, did it brew?",
         elapsedTime >= beverage.getBrewTime() * 1000);
     Assert.assertTrue("There is an error message", u.isNullOrEmpty(machine.getErrorMessage()));
+  }
+
+  @Test
+  public void should_manage_exceptions() throws InterruptedException {
+    final VendingMachine machine = u.getMachine();
+    machine.insertCoin(0.4);
+    final Beverage beverage = Mockito.mock(Tea.class, Mockito.CALLS_REAL_METHODS);
+    Mockito.doThrow(new InterruptedException()).when(beverage).brew();
+
+    final boolean done = machine.select(beverage);
+
+    Assert.assertFalse("The machine gave me a coffee!", done);
+    Assert.assertNotNull("There is no error message", machine.getErrorMessage());
   }
 
   @Test
